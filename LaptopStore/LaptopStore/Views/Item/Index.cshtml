@@ -1,0 +1,128 @@
+﻿@model LaptopStore.LaptopViews.LaptopInfoView
+@{
+    ViewBag.Title = "Index";
+}
+
+@*LaptopID = Category_id
+Brand = Item_code
+Processor = Description
+RAM =  ?????//Category//
+Price = Item_Price
+Model = Item_Name
+imgAddr = image_path*@
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+</head>
+
+<h2>Index</h2>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSave").click(function () {
+            SaveItem();
+        });
+    });
+
+    function ResetItem() {
+        $("#LaptopID").val("");
+        $("#Brand").val("");
+        $("#Model").val("");
+        $("#Processor ").val("");
+        $("#RAM").val("");
+        $("#Price").val("");
+        $("#imgAddr").val("");
+    }
+
+    function SaveItem() {
+        var formdata = new FormData;
+        formdata.append("LaptopID", $("#LaptopID").val());
+        formdata.append("Brand", $("#Brand").val());
+        formdata.append("Model", $("#Model").val());
+        formdata.append("Processor ", $("#Processor ").val());
+        formdata.append("RAM", $("#RAM").val());
+        formdata.append("Price", $("#Price").val());
+        formdata.append("imgAddr", $("#imgAddr").get(0).files[0]);
+
+        $.ajax({
+            async: true,
+            dataType: 'JSON',
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            url: '/Item/Index',
+            data: formdata,
+            success: function (data) {
+                if (data.Success) {
+                    alert(data.Message);
+                    ResetItem();
+                }
+            },
+            error: function () {
+                alert("Can't to add Item.");
+            }
+        });
+    }
+
+</script>
+
+
+<div class="container">
+
+    <div class="col-md-4">
+        <div class="form-group">
+            Category :
+            @Html.DropDownListFor(model => model.LaptopID, new SelectList(Model.CategorySelectListItem, "Value", "Text"),
+                                    new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            Item Code :
+            @Html.TextBoxFor(model => model.Brand, new { @class = "form-control", autocompelte = "Off" })
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            Item Name :
+            @Html.TextBoxFor(model => model.Model, new { @class = "form-control", autocompelte = "Off" })
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            Processor  :
+            @Html.TextBoxFor(model => model.Processor, new { @class = "form-control", autocompelte = "Off" })
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            RAM  :
+            @Html.TextBoxFor(model => model.RAM, new { @class = "form-control", autocompelte = "Off" })
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            Item Price :
+            @Html.TextBoxFor(model => model.Price, new { @class = "form-control", autocompelte = "Off" })
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            Image Path :
+            @Html.TextBoxFor(model => model.imgAddr, new { type = "file", @class = "form-control" })
+        </div>
+    </div>
+
+    <div>
+        <input type="button" value="Save" name="save" class="btn btn-primary" id="btnSave" />
+        &nbsp;
+        <input type="button" value="Reset" name="reset" class="btn btn-danger" />
+    </div>
+
+</div>
